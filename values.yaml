@@ -1,0 +1,36 @@
+
+hiveMetaStore:
+  enabled: true
+  image: naushadh/hive-metastore
+  imagePullPolicy: IfNotPresent
+  managedDB: true
+  S3Endpoint:
+    s3Bucket: dremio-dev-rki
+    s3Prefix: /hive
+    awsAccessKeyId:
+    awsSecretAccessKey:
+#    use this if you are using something other than S3
+#    customS3EndpointURL: http://minio:9000
+  service:
+    type: ClusterIP
+    port: 9083
+
+trino:
+  service:
+    type: LoadBalancer
+    port: 8080
+  env:
+    - name: AWS_ACCESS_KEY_ID
+      value:
+    - name: AWS_SECRET_ACCESS_KEY
+      value:
+  additionalCatalogs:
+    iceberg: |-
+      connector.name=iceberg
+      hive.metastore.uri=thrift://hive-metastore:9083
+      iceberg.file-format=PARQUET
+    hive-postgres: |-
+      connector.name=postgresql
+      connection-url=jdbc:postgresql://hive-metastore:5432/postgres
+      connection-user=hive
+      connection-password=hive

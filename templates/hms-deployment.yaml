@@ -1,0 +1,76 @@
+{{- if .Values.hiveMetaStore.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hive-metastore
+  labels:
+    app: hive-metastore
+    managed-by: {{ .Release.Service }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hive-metastore
+  template:
+    metadata:
+      labels:
+        app: hive-metastore
+    spec:
+      containers:
+        - name: hive-metastore
+          image: {{ .Values.hiveMetaStore.image }}
+          imagePullPolicy: {{ .Values.hiveMetaStore.imagePullPolicy }}
+          ports:
+              - containerPort: 9083
+          env:
+            - name: DATABASE_TYPE_JDBC
+              value: {{ default "postgresql" .Values.hiveMetaStore.databaseTypeJdbc }}
+            - name: DATABASE_TYPE
+              value: {{ default "postgres" .Values.hiveMetaStore.databaseType }}
+            - name: DATABASE_HOST
+              value: {{ default "localhost" .Values.hiveMetaStore.databaseHost }}
+            - name: DATABASE_PORT
+              value: {{ default "5432" .Values.hiveMetaStore.databasePort | quote }}
+            - name: DATABASE_DB
+              value: {{ default "hive" .Values.hiveMetaStore.databaseDb }}
+            - name: DATABASE_USER
+              value: {{ default "hive" .Values.hiveMetaStore.databaseUser }}
+            - name: DATABASE_PASSWORD
+              {{- if .Values.hiveMetaStore.managedDB }}
+              value: hive
+              {{- else }}
+              valueFrom:
+                  secretKeyRef:
+                    name: {{ .Values.hiveMetaStore.databaseSecret }}
+                    key: {{ .Values.hiveMetaStore.databaseSecretKey }}
+              {{- end }}
+            {{- with .Values.hiveMetaStore.S3Endpoint }}
+            - name: S3_ENDPOINT_URL
+              value: {{ default "" .customS3EndpointURL }}
+            - name: S3_BUCKET
+              value: {{ .s3Bucket }}
+            - name: S3_PREFIX
+              value: {{ .s3Prefix }}
+            - name: AWS_ACCESS_KEY_ID
+              value: {{ .awsAccessKeyId }}
+            - name: AWS_SECRET_ACCESS_KEY
+              value: {{ .awsSecretAccessKey }}
+              {{- end }}
+        {{- if .Values.hiveMetaStore.managedDB}}
+        - name: postgres
+          image: postgres
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: hive
+            - name: POSTGRES_PASSWORD
+              value: hive
+            - name: POSTGRES_DB
+              value: hive
+        {{- end }}
+        {{- end -}}
