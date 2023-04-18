@@ -3,6 +3,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: {{ .Release.Name }}-podsecuritypolicy
+  namespace: {{ .Release.Namespace }}
   labels:
     managed-by: {{ .Release.Service }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -22,6 +23,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: {{ .Release.Name }}-podsecuritypolicy
+  namespace: {{ .Release.Namespace }}
   labels:
       managed-by: {{ .Release.Service }}
       chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -33,6 +35,6 @@ roleRef:
   name: {{ .Release.Name }}-podsecuritypolicy
 subjects:
   - kind: ServiceAccount
-    name: {{ .Values.serviceAccount.name }}
+    name: {{ .Values.trino.serviceAccount.name }}
     namespace: {{ .Release.Namespace }}
 {{- end -}}

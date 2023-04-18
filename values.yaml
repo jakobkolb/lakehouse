@@ -1,7 +1,7 @@
 serviceAccount:
   podSecurityPolicy:
     enabled: true
-    name: vmware-system-priviledged
+    name: vmware-system-privileged
 
 hiveMetaStore:
   enabled: true
