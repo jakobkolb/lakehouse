@@ -3,22 +3,6 @@ serviceAccount:
     enabled: true
     name: vmware-system-privileged
 
-hiveMetaStore:
-  enabled: true
-  image: naushadh/hive-metastore
-  imagePullPolicy: IfNotPresent
-  managedDB: true
-  S3Endpoint:
-    s3Bucket: dremio-dev-rki
-    s3Prefix: /hive
-    awsAccessKeyId:
-    awsSecretAccessKey:
-#    use this if you are using something other than S3
-#    customS3EndpointURL: http://minio:9000
-  service:
-    type: ClusterIP
-    port: 9083
-
 trino:
   serviceAccount:
     create: true

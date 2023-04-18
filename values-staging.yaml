@@ -16,3 +16,18 @@ trino:
       requests:
         ephemeral-storage: 1Gi
         memory: 2Gi
+
+hiveMetaStore:
+  enabled: true
+  image: naushadh/hive-metastore
+  imagePullPolicy: IfNotPresent
+  managedDB: true
+  S3Endpoint:
+    s3Bucket: pockubernetes
+    s3Prefix: /ifs/S3-Prod/poc
+    awsAccessKeyId: '9_RKID1\kolbj_accid'
+    awsSecretAccessKey: '37srLbsvxHL383GBO3hyJ1UQFiT1'
+    customS3EndpointURL: http://10.15.147.50:9021
+  service:
+    type: ClusterIP
+    port: 9083
