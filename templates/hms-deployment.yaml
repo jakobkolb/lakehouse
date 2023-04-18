@@ -27,6 +27,10 @@ spec:
           ports:
               - containerPort: 9083
           env:
+            {{- if .Values.hiveMetaStore.additionalJavaOpts }}
+            - name: JAVA_OPTS
+              value: {{ .Values.hiveMetaStore.additionalJavaOpts }}
+            {{- end }}
             - name: DATABASE_TYPE_JDBC
               value: {{ default "postgresql" .Values.hiveMetaStore.databaseTypeJdbc }}
             - name: DATABASE_TYPE
