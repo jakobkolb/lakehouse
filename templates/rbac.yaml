@@ -1,0 +1,38 @@
+{{- if .Values.serviceAccount.podSecurityPolicy.enabled -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ .Release.Name }}-podsecuritypolicy
+  labels:
+    managed-by: {{ .Release.Service }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+rules:
+  - apiGroups:
+      - policy
+    resources:
+      - podsecuritypolicies
+    verbs:
+      - use
+    resourceNames:
+      - {{ .Values.serviceAccount.podSecurityPolicy.name }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Release.Name }}-podsecuritypolicy
+  labels:
+      managed-by: {{ .Release.Service }}
+      chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+      release: {{ .Release.Name }}
+      heritage: {{ .Release.Service }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ .Release.Name }}-podsecuritypolicy
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.serviceAccount.name }}
+    namespace: {{ .Release.Namespace }}
+{{- end -}}

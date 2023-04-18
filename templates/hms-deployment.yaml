@@ -19,6 +19,7 @@ spec:
       labels:
         app: hive-metastore
     spec:
+      serviceAccountName: {{ .Values.trino.serviceAccount.name }}
       containers:
         - name: hive-metastore
           image: {{ .Values.hiveMetaStore.image }}
@@ -39,14 +40,14 @@ spec:
             - name: DATABASE_USER
               value: {{ default "hive" .Values.hiveMetaStore.databaseUser }}
             - name: DATABASE_PASSWORD
-              {{- if .Values.hiveMetaStore.managedDB }}
+            {{- if .Values.hiveMetaStore.managedDB }}
               value: hive
               {{- else }}
               valueFrom:
                   secretKeyRef:
                     name: {{ .Values.hiveMetaStore.databaseSecret }}
                     key: {{ .Values.hiveMetaStore.databaseSecretKey }}
-              {{- end }}
+            {{- end }}
             {{- with .Values.hiveMetaStore.S3Endpoint }}
             - name: S3_ENDPOINT_URL
               value: {{ default "" .customS3EndpointURL }}
@@ -58,7 +59,7 @@ spec:
               value: {{ .awsAccessKeyId }}
             - name: AWS_SECRET_ACCESS_KEY
               value: {{ .awsSecretAccessKey }}
-              {{- end }}
+            {{- end }}
         {{- if .Values.hiveMetaStore.managedDB}}
         - name: postgres
           image: postgres

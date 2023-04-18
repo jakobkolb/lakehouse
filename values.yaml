@@ -1,3 +1,7 @@
+serviceAccount:
+  podSecurityPolicy:
+    enabled: true
+    name: vmware-system-priviledged
 
 hiveMetaStore:
   enabled: true
@@ -16,6 +20,9 @@ hiveMetaStore:
     port: 9083
 
 trino:
+  serviceAccount:
+    create: true
+    name: trino
   service:
     type: LoadBalancer
     port: 8080
