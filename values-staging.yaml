@@ -16,22 +16,6 @@ trino:
       connection-url=jdbc:postgresql://hive-metastore-staging.tkpoc.it32.labor:5432/postgres
       connection-user=hive
       connection-password=hive
-  coordinator:
-    resources:
-      limits:
-        ephemeral-storage: 1Gi
-        memory: 3Gi
-      requests:
-        ephemeral-storage: 1Gi
-        memory: 2Gi
-  worker:
-    resources:
-      limits:
-        ephemeral-storage: 1Gi
-        memory: 3Gi
-      requests:
-        ephemeral-storage: 1Gi
-        memory: 2Gi
 
 hiveMetaStore:
   enabled: true

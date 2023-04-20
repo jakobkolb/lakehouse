@@ -1,0 +1,32 @@
+stage: staging
+trino:
+  env:
+    - name: AWS_ACCESS_KEY_ID
+      value: 'AKIAZCLVOMZLLQWFVSE2'
+    - name: AWS_SECRET_ACCESS_KEY
+      value: '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'
+
+  additionalCatalogs:
+    iceberg: |-
+      connector.name=iceberg
+      hive.metastore.uri=thrift://hive-metastore:9083
+      iceberg.file-format=PARQUET
+    hive-postgres: |-
+      connector.name=postgresql
+      connection-url=jdbc:postgresql://hive-metastore:5432/postgres
+      connection-user=hive
+      connection-password=hive
+
+hiveMetaStore:
+  enabled: true
+  image: jakobjkolb/hive-metastore
+  imagePullPolicy: IfNotPresent
+  managedDB: true
+  S3Endpoint:
+    s3Bucket: dremio-dev-rki
+    s3Prefix: /
+    awsAccessKeyId: 'AKIAZCLVOMZLLQWFVSE2'
+    awsSecretAccessKey: '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'
+  service:
+    type: LoadBalancer
+    port: 9083

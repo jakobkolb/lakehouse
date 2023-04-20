@@ -10,3 +10,19 @@ trino:
   service:
     type: LoadBalancer
     port: 8080
+  coordinator:
+    resources:
+      limits:
+        ephemeral-storage: 1Gi
+        memory: 3Gi
+      requests:
+        ephemeral-storage: 1Gi
+        memory: 2Gi
+  worker:
+    resources:
+      limits:
+        ephemeral-storage: 1Gi
+        memory: 3Gi
+      requests:
+        ephemeral-storage: 1Gi
+        memory: 2Gi

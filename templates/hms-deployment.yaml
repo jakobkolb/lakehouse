@@ -20,6 +20,7 @@ spec:
         app: hive-metastore
     spec:
       serviceAccountName: {{ .Values.trino.serviceAccount.name }}
+
       containers:
         - name: hive-metastore
           image: {{ .Values.hiveMetaStore.image }}
@@ -64,6 +65,22 @@ spec:
             - name: AWS_SECRET_ACCESS_KEY
               value: {{ .awsSecretAccessKey }}
             {{- end }}
+          readinessProbe:
+            tcpSocket:
+              port: 9083
+            initialDelaySeconds: 80
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: 9083
+            initialDelaySeconds: 90
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
         {{- if .Values.hiveMetaStore.managedDB}}
         - name: postgres
           image: postgres
