@@ -19,7 +19,7 @@ trino:
 
 hiveMetaStore:
   enabled: true
-  image: naushadh/hive-metastore
+  image: jakobjkolb/hive-metastore
   imagePullPolicy: IfNotPresent
   managedDB: true
   additionalJavaOpts: -XX:-UseContainerSupport
