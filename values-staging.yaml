@@ -1,5 +1,21 @@
 stage: staging
 trino:
+  env:
+    - name: AWS_ACCESS_KEY_ID
+      value: '9_RKID1\kolbj_accid'
+    - name: AWS_SECRET_ACCESS_KEY
+      value: '37srLbsvxHL383GBO3hyJ1UQFiT1'
+
+  additionalCatalogs:
+    iceberg: |-
+      connector.name=iceberg
+      hive.metastore.uri=thrift://hive-metastore-staging.tkpoc.it32.labor:9083
+      iceberg.file-format=PARQUET
+    hive-postgres: |-
+      connector.name=postgresql
+      connection-url=jdbc:postgresql://hive-metastore-staging.tkpoc.it32.labor:5432/postgres
+      connection-user=hive
+      connection-password=hive
   coordinator:
     resources:
       limits:
@@ -22,7 +38,6 @@ hiveMetaStore:
   image: jakobjkolb/hive-metastore
   imagePullPolicy: IfNotPresent
   managedDB: true
-  additionalJavaOpts: -XX:-UseContainerSupport
   S3Endpoint:
     s3Bucket: pockubernetes
     s3Prefix: /ifs/S3-Prod/poc
@@ -30,5 +45,6 @@ hiveMetaStore:
     awsSecretAccessKey: '37srLbsvxHL383GBO3hyJ1UQFiT1'
     customS3EndpointURL: http://10.15.147.50:9021
   service:
-    type: ClusterIP
+    type: LoadBalancer
     port: 9083
+    externalDnsName: hive-metastore-staging.tkpoc.it32.labor
