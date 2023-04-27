@@ -26,7 +26,7 @@ spec:
           image: {{ .Values.hiveMetaStore.image }}
           imagePullPolicy: {{ .Values.hiveMetaStore.imagePullPolicy }}
           ports:
-              - containerPort: 9083
+            - containerPort: 9083
           env:
             {{- if .Values.hiveMetaStore.additionalJavaOpts }}
             - name: JAVA_OPTS
@@ -68,7 +68,7 @@ spec:
           readinessProbe:
             tcpSocket:
               port: 9083
-            initialDelaySeconds: 80
+            initialDelaySeconds: 60
             periodSeconds: 10
             timeoutSeconds: 5
             successThreshold: 1
@@ -77,7 +77,7 @@ spec:
             tcpSocket:
               port: 9083
             initialDelaySeconds: 90
-            periodSeconds: 10
+            periodSeconds: 30
             timeoutSeconds: 5
             successThreshold: 1
             failureThreshold: 3
