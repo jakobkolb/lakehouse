@@ -20,7 +20,7 @@ trino:
 hiveMetaStore:
   enabled: true
   image: jakobjkolb/hive-metastore
-  imagePullPolicy: IfNotPresent
+  imagePullPolicy: Always
   managedDB: true
   S3Endpoint:
     s3Bucket: dremio-dev-rki

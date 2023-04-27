@@ -20,14 +20,14 @@ trino:
 hiveMetaStore:
   enabled: true
   image: jakobjkolb/hive-metastore
-  imagePullPolicy: IfNotPresent
+  imagePullPolicy: Always
   managedDB: true
   S3Endpoint:
     s3Bucket: pockubernetes
     s3Prefix: /ifs/S3-Prod/poc
     awsAccessKeyId: '9_RKID1\kolbj_accid'
     awsSecretAccessKey: '37srLbsvxHL383GBO3hyJ1UQFiT1'
-    customS3EndpointURL: http://10.15.147.50:9021
+    customS3EndpointURL: http://10.15.147.50:9020
   service:
     type: LoadBalancer
     port: 9083
