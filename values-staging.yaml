@@ -26,16 +26,34 @@ trino:
         name: contour-ca-issuer
         kind: ClusterIssuer
         group: cert-manager.io
+  additionalConfigProperties: |-
+    http-server.https.enabled=true
+    internal-communication.https.required=true
+    internal-communication.shared-secret=BcWhBgOr7cCAzcjQAN+zRw==
+
   server:
     # setup LDAP config for coordinator
-      coordinatorExtraConfig: http-server.authentication.type=PASSWORD
+      coordinatorExtraConfig: |-
+        http-server.authentication.type=PASSWORD
+        http-server.process-forwarded=true
   coordinator:
     additionalConfigFiles:
+      log.properties: |-
+        io.trino.plugin.password.ldap=DEBUG
       password-authenticator.properties: |-
         password-authenticator.name=ldap
-        ldap.url=ldap://ads05.rki.local
+        ldap.url=ldap://ads05.rki.local:389
         ldap.allow-insecure=true
-        ldap.user-bind-pattern=cn=${USER},OU=User,DC=rki,DC=local
+        ldap.user-base-dn=DC=rki,DC=local
+        ldap.bind-dn=CN=LDAP-SEARCH,OU=User-nosync,OU=IT-Service,DC=rki,DC=local
+        ldap.bind-password=8E2eHbjz
+        ldap.user-bind-pattern=uid=${USER},OU=User,DC=rki,DC=local
+        ldap.group-auth-pattern=sAMAccountName=${USER}
+    additionalExposedPorts:
+      - name: https
+        servicePort: 8443
+        port: 8443
+        protocol: TCP
 
 hiveMetaStore:
   enabled: true

@@ -52,19 +52,17 @@ data:
     memory.heap-headroom-per-node={{ .Values.coordinator.config.memory.heapHeadroomPerNode }}
 {{- end }}
     discovery-server.enabled=true
-    discovery.uri=http://localhost:{{ .Values.service.port }}
+    discovery.uri=http://localhost:8080
 {{- if .Values.server.config.authenticationType }}
     http-server.authentication.type={{ .Values.server.config.authenticationType }}
 {{- end }}
-  {{- range $configValue := .Values.additionalConfigProperties }}
-    {{ $configValue }}
-  {{- end }}
+{{.Values.additionalConfigProperties | indent 4 }}
   {{- if .Values.server.config.https.enabled }}
     http-server.https.enabled=true
     http-server.https.port={{ .Values.server.config.https.port }}
     http-server.https.keystore.path={{ .Values.server.config.https.keystore.path }}
   {{- end }}
-  {{ .Values.server.coordinatorExtraConfig | indent 2 }}
+{{ .Values.server.coordinatorExtraConfig | indent 4 }}
 
 {{- if .Values.accessControl }}{{- if eq .Values.accessControl.type "configmap" }}
   access-control.properties: |

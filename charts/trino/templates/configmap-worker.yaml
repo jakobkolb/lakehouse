@@ -47,11 +47,9 @@ data:
   {{- if .Values.worker.config.memory.heapHeadroomPerNode }}
     memory.heap-headroom-per-node={{ .Values.worker.config.memory.heapHeadroomPerNode }}
   {{- end }}
-    discovery.uri=http://{{ template "trino.fullname" . }}:{{ .Values.service.port }}
-  {{- range $configValue := .Values.additionalConfigProperties }}
-    {{ $configValue }}
-  {{- end }}
-  {{ .Values.server.workerExtraConfig | indent 4 }}
+    discovery.uri=http://{{ template "trino.fullname" . }}:8080
+{{ .Values.additionalConfigProperties | indent 4 }}
+{{ .Values.server.workerExtraConfig | indent 4 }}
 
   exchange-manager.properties: |
     exchange-manager.name={{ .Values.server.exchangeManager.name }}
