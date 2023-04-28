@@ -16,7 +16,16 @@ trino:
       connection-url=jdbc:postgresql://hive-metastore:5432/postgres
       connection-user=hive
       connection-password=hive
-  
+  ingress:
+    enabled: true
+    hostName: trino-staging.tkpoc.it32.labor
+    tls:
+      enabled: true
+      secretName: trino-staging-tls
+      issuerRef:
+        name: contour-ca-issuer
+        kind: ClusterIssuer
+        group: cert-manager.io
 
 hiveMetaStore:
   enabled: true

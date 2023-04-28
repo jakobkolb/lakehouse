@@ -1,0 +1,44 @@
+{{- if .Values.trino.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ template "trino.fullname" .Subcharts.trino }}-ingress
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "trino.name" . }}
+    helm.sh/chart: {{ include "trino.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  {{- if .Values.trino.ingress.tls.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.trino.ingress.hostName }}
+      secretName: {{ .Values.trino.ingress.tls.secretName }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.trino.ingress.hostName }}
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: {{ template "trino.fullname" .Subcharts.trino }}
+              port:
+                number: {{ .Values.trino.service.port }}
+{{- if .Values.trino.ingress.tls.enabled }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .Values.trino.ingress.tls.secretName }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  secretName: {{ .Values.trino.ingress.tls.secretName }}
+  dnsNames:
+    - {{ .Values.trino.ingress.hostName }}
+  issuerRef:
+    {{- toYaml .Values.trino.ingress.tls.issuerRef | nindent 4 }}
+{{- end}}
+{{- end }}
