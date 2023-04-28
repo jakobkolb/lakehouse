@@ -28,8 +28,7 @@ trino:
         group: cert-manager.io
   server:
     # setup LDAP config for coordinator
-      coordinatorExtraConfig: |-
-        http-server.authentication.type=PASSWORD
+      coordinatorExtraConfig: http-server.authentication.type=PASSWORD
   coordinator:
     additionalConfigFiles:
       password-authenticator.properties: |-
