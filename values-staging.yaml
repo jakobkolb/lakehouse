@@ -26,6 +26,17 @@ trino:
         name: contour-ca-issuer
         kind: ClusterIssuer
         group: cert-manager.io
+  server:
+    # setup LDAP config for coordinator
+      coordinatorExtraConfig: |-
+        http-server.authentication.type=PASSWORD
+  coordinator:
+    additionalConfigFiles:
+      password-authenticator.properties: |-
+        password-authenticator.name=ldap
+        ldap.url=ldap://ads05.rki.local
+        ldap.allow-insecure=true
+        ldap.user-bind-pattern=cn=${USER},OU=User,DC=rki,DC=local
 
 hiveMetaStore:
   enabled: true
