@@ -16,6 +16,7 @@ trino:
       connection-url=jdbc:postgresql://hive-metastore:5432/postgres
       connection-user=hive
       connection-password=hive
+  
 
 hiveMetaStore:
   enabled: true

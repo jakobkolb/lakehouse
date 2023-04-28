@@ -81,6 +81,9 @@ spec:
             timeoutSeconds: 5
             successThreshold: 1
             failureThreshold: 3
+          resources:
+            requests:
+              ephemeral-storage: 500Mi
         {{- if .Values.hiveMetaStore.managedDB}}
         - name: postgres
           image: postgres
@@ -94,5 +97,8 @@ spec:
               value: hive
             - name: POSTGRES_DB
               value: hive
+          resources:
+            requests:
+              ephemeral-storage: 1Gi
         {{- end }}
         {{- end -}}
